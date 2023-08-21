@@ -4,12 +4,15 @@ import { CharacterProfile, IntentGetCharacterAttributeParameters } from "./chatb
 import { characterProfiles } from "./database"
 
 export function getCharacterAttribute(parameters: IntentGetCharacterAttributeParameters) {
-  const providedName = parameters.character.name
+  const providedName = parameters.character
     .split(" ")
     .filter((word) => word.length > 0)
     .join(" ")
     .toLowerCase()
 
+  // TODO: Add support for nicknames
+  // TODO: Add support for aliases
+  // TODO: Combine into one query
   return characterProfiles
     .listDocuments()
     .then((documents) => Promise.all(documents.map((document) => document.get())))
@@ -46,7 +49,7 @@ export function getCharacterAttribute(parameters: IntentGetCharacterAttributePar
           fulfillmentMessages: [
             {
               text: {
-                text: [`Sorry, but I don't know anyone named ${parameters.character.name}.`],
+                text: [`Sorry, but I don't know anyone named ${parameters.character}.`],
               },
             },
           ],
@@ -403,6 +406,5 @@ export function getCharacterAttribute(parameters: IntentGetCharacterAttributePar
           },
         ],
       }
-    }
-  )
+    })
 }

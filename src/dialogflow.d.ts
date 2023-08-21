@@ -298,7 +298,3 @@ export type OriginalDetectIntentRequest = {
   version?: string
   payload?: object
 }
-
-export type EntitySysPerson = {
-  name: string
-}

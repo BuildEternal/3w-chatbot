@@ -14,29 +14,35 @@ import { getCharacterAttribute } from "./intents"
 import { WebhookRequest } from "./dialogflow"
 import { IntentGetCharacterAttributeParameters } from "./chatbot"
 
-export const chatbotFulfillment = onRequest((request, response) => {
+export const chatbotFulfillment = onRequest(async (request, response) => {
   const data: WebhookRequest = request.body
   const queryResult = data.queryResult
   const { intent, parameters } = queryResult
 
-  switch (intent.displayName) {
-    case "Get Character Attribute":
-      getCharacterAttribute(parameters as IntentGetCharacterAttributeParameters).then((webhookResponse) =>
-        response.send(webhookResponse),
-      )
-      break
-
-    default:
+  if (intent.displayName === "Get Character Attribute") {
+    try {
+      response.send(await getCharacterAttribute(parameters as IntentGetCharacterAttributeParameters))
+    } catch (error) {
       response.send({
         fulfillmentMessages: [
           {
             text: {
-              text: ["Default response from Firebase Cloud Functions."],
+              text: ["Error: " + error],
             },
           },
         ],
       })
-      break
+    }
+  } else {
+    response.send({
+      fulfillmentMessages: [
+        {
+          text: {
+            text: ["Default response from Firebase Cloud Functions."],
+          },
+        },
+      ],
+    })
   }
 })
 

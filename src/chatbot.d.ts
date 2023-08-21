@@ -1,7 +1,5 @@
-import { EntitySysPerson } from "./dialogflow"
-
 export type IntentGetCharacterAttributeParameters = {
-  character: EntitySysPerson
+  character: string
   attribute: string
 }
 
